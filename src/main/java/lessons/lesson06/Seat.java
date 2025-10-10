@@ -1,43 +1,59 @@
 package lessons.lesson06;
 
 import lessons.lesson06.enums.SeatClass;
+import lessons.lesson06.enums.SeatStatus;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 public class Seat implements Serializable {
     private final int number;
     private final SeatClass seatClass;
-    private boolean booked;
+    private SeatStatus status;
     private String passengerName;
+    private LocalDateTime bookingTime;
 
     public Seat(int number, SeatClass seatClass) {
         this.number = number;
         this.seatClass = seatClass;
-        this.booked = false;
-        this.passengerName = "";
+        this.status = SeatStatus.AVAILABLE;
     }
 
     public int getNumber() { return number; }
     public SeatClass getSeatClass() { return seatClass; }
-    public boolean isBooked() { return booked; }
+    public SeatStatus getStatus() { return status; }
     public String getPassengerName() { return passengerName; }
+    public LocalDateTime getBookingTime() { return bookingTime; }
+
+    public boolean isBooked() {
+        return status == SeatStatus.BOOKED || status == SeatStatus.PAID;
+    }
 
     public void book(String name) {
-        booked = true;
-        passengerName = name;
+        this.status = SeatStatus.BOOKED;
+        this.passengerName = name;
+        this.bookingTime = LocalDateTime.now();
+    }
+
+    public void pay() {
+        if (status == SeatStatus.BOOKED)
+            this.status = SeatStatus.PAID;
     }
 
     public void cancel() {
-        booked = false;
-        passengerName = "";
+        this.status = SeatStatus.AVAILABLE;
+        this.passengerName = null;
+        this.bookingTime = null;
     }
 
     @Override
     public String toString() {
-        return String.format("Seat %02d [%s] - %s",
-            number, seatClass,
-            booked ? "BOOKED by " + passengerName : "AVAILABLE");
+        String info = String.format("Seat %02d [%s] - %s",
+            number, seatClass, status);
+        if (passengerName != null)
+            info += " | " + passengerName;
+        if (bookingTime != null)
+            info += " | Booked at: " + bookingTime;
+        return info;
     }
 }
-
-

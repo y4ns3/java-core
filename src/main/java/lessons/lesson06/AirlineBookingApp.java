@@ -18,7 +18,8 @@ public class AirlineBookingApp {
             System.out.println("3. Book a seat");
             System.out.println("4. Cancel booking");
             System.out.println("5. Find seat info");
-            System.out.println("6. Exit");
+            System.out.println("6. Pay for seat");
+            System.out.println("7. Exit");
             System.out.print("Choose option: ");
             int choice = sc.nextInt();
             sc.nextLine();
@@ -48,6 +49,13 @@ public class AirlineBookingApp {
                     airplane.showSeatInfo(num);
                 }
                 case 6 -> {
+                    System.out.print("Enter seat number to pay: ");
+                    int num = sc.nextInt();
+                    if (airplane.payForSeat(num))
+                        System.out.println("Seat paid successfully!");
+                    else System.out.println("Seat not booked or already paid.");
+                }
+                case 7 -> {
                     saveData(airplane);
                     System.out.println("Data saved. Exiting...");
                     running = false;
